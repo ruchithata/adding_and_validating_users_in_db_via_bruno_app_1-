@@ -1,15 +1,23 @@
 const express = require('express');
-const { resolve } = require('path');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const router = require('./controller/routes');
+const connectDB = require('./db');
 
+// Initialize express app
 const app = express();
-const port = 3010;
+app.use(bodyParser.json());
+app.use(cors());
+const PORT = 3000;
+const uri = "mongodb+srv://abilashamanne:abilasha@setting-up-a-db-1.jmatm.mongodb.net/?retryWrites=true&w=majority&appName=Setting-up-a-DB-1";
 
-app.use(express.static('static'));
+// Connect to the database
+connectDB(uri);
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
+// Use user routes
+app.use('/api', router); // Prefix all user-related routes with /api/users
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
